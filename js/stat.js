@@ -35,25 +35,29 @@ var renderText = function (ctx, text, x, y, textBaseline) {
   ctx.fillText(text, x, y);
 };
 
-var renderColumn = function (ctx, names, times) {
+var renderColumn = function (ctx, names, times, x, y, barHeight, fontPositionX) {
+  renderText(ctx, Math.round(times), fontPositionX, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP * 2.5 - barHeight);
+  renderText(ctx, names, fontPositionX, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP);
+  var saturation = Math.round(Math.random() * 100) + '%';
+  ctx.fillStyle = 'hsl(240, ' + saturation + ', 50%)';
+  if (names === 'Вы') {
+    ctx.fillStyle = CURRENT_PLAYER_COLOR;
+  }
+  ctx.fillRect(x, y, BAR_WIDTH, barHeight);
+};
+
+var renderColumns = function (ctx, names, times) {
   var maxTime = getMaxElement(times);
 
   for (var i = 0; i < names.length; i++) {
-    renderText(ctx, Math.round(times[i]), CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP * 2.5 - (BAR_HEIGHT * times[i]) / maxTime);
-    renderText(ctx, names[i], CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP);
-    var saturation = Math.round(Math.random() * 100) + '%';
-    ctx.fillStyle = 'hsl(240, ' + saturation + ', 50%)';
-    if (names[i] === 'Вы') {
-      ctx.fillStyle = CURRENT_PLAYER_COLOR;
-    }
-    ctx.fillRect(CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP * 2 - (BAR_HEIGHT * times[i]) / maxTime, BAR_WIDTH, (BAR_HEIGHT * times[i]) / maxTime);
+    renderColumn(ctx, names[i], times[i], CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP * 2 - (BAR_HEIGHT * times[i]) / maxTime, (BAR_HEIGHT * times[i]) / maxTime, CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i);
   }
 };
 
 window.renderStatistics = function (ctx, names, times) {
   renderCloud(ctx, CLOUD_X + SHADOW_GAP, CLOUD_Y + SHADOW_GAP, 'rgba(0, 0, 0, 0.7)');
   renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
-  renderColumn(ctx, names, times);
+  renderColumns(ctx, names, times);
   renderText(ctx, 'Ура вы победили!', CLOUD_X + FONT_GAP, CLOUD_Y + FONT_GAP, 'hanging');
   renderText(ctx, 'Список результатов:', CLOUD_X + FONT_GAP, CLOUD_Y + FONT_GAP * 2, 'hanging');
 };
