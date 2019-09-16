@@ -35,9 +35,9 @@ var renderText = function (ctx, text, x, y, textBaseline) {
   ctx.fillText(text, x, y);
 };
 
-var renderColumn = function (ctx, names, times, x, y, barHeight, fontPositionX) {
-  renderText(ctx, Math.round(times), fontPositionX, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP * 2.5 - barHeight);
-  renderText(ctx, names, fontPositionX, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP);
+var renderColumn = function (ctx, names, times, x, y, barHeight) {
+  renderText(ctx, Math.round(times), x, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP * 2.5 - barHeight);
+  renderText(ctx, names, x, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP);
   var saturation = Math.round(Math.random() * 100) + '%';
   ctx.fillStyle = 'hsl(240, ' + saturation + ', 50%)';
   if (names === 'Вы') {
@@ -50,7 +50,7 @@ var renderColumns = function (ctx, names, times) {
   var maxTime = getMaxElement(times);
 
   for (var i = 0; i < names.length; i++) {
-    renderColumn(ctx, names[i], times[i], CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP * 2 - (BAR_HEIGHT * times[i]) / maxTime, (BAR_HEIGHT * times[i]) / maxTime, CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i);
+    renderColumn(ctx, names[i], times[i], CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i, CLOUD_Y + CLOUD_HEIGHT - FONT_GAP * 2 - (BAR_HEIGHT * times[i]) / maxTime, (BAR_HEIGHT * times[i]) / maxTime);
   }
 };
 
