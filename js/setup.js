@@ -56,7 +56,6 @@ var wizardsData = generateWizardsData(WIZARDS_QUANTITY);
 
 var activateSetup = function () {
   setupBlock.classList.remove('hidden');
-  setupSimilarBlock.classList.remove('hidden');
 };
 
 var activateSetupSimilar = function () {
