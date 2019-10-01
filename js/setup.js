@@ -12,8 +12,50 @@
   var eyesColorInput = setupWizardAppearance.querySelector('input[name="eyes-color"]');
   var setupFireball = setupBlock.querySelector('.setup-fireball-wrap');
   var fireballColorInput = setupFireball.querySelector('input[name="fireball-color"]');
-
+  var setupSimilarBlock = document.querySelector('.setup-similar');
+  var setupSimilarList = document.querySelector('.setup-similar-list');
+  var wizardTemplateId = document.querySelector('#similar-wizard-template');
+  var wizardTemplate = wizardTemplateId.content.querySelector('.setup-similar-item');
   var isFocus = false;
+
+  var defaultX = setupBlock.style.top;
+  var defaultY = setupBlock.style.left;
+
+  var resetPopupCoordinates = function () {
+    setupBlock.style.top = defaultX;
+    setupBlock.style.left = defaultY;
+  };
+
+  var activateSetupSimilar = function () {
+    setupSimilarBlock.classList.remove('hidden');
+  };
+
+  var createWizardElement = function (data) {
+    var wizardElement = wizardTemplate.cloneNode(true);
+    wizardElement.querySelector('.setup-similar-label').textContent = data.name;
+    wizardElement.querySelector('.wizard-coat').style.fill = data.coatColor;
+    wizardElement.querySelector('.wizard-eyes').style.fill = data.eyesColor;
+
+    return wizardElement;
+  };
+
+  var createWizardElements = function (data) {
+    var documentFragment = document.createDocumentFragment();
+    for (var i = 0; i < data.length; i++) {
+      var wizardElement = createWizardElement(data[i]);
+      documentFragment.appendChild(wizardElement);
+    }
+
+    return documentFragment;
+  };
+
+  var insertWizardElements = function (data) {
+    var documentFragment = createWizardElements(data);
+    setupSimilarList.appendChild(documentFragment);
+  };
+
+  activateSetupSimilar();
+  insertWizardElements(window.data.wizardsData);
 
   var openPopup = function () {
     setupBlock.classList.remove('hidden');
@@ -55,11 +97,13 @@
 
   var setupCloseEnterHandler = function (evt) {
     window.util.isEnterEvent(evt, closePopup);
+    resetPopupCoordinates();
   };
 
   var popupEscPressHandler = function (evt) {
     if (!isFocus) {
       window.util.isEscEvent(evt, closePopup);
+      resetPopupCoordinates();
     }
   };
 
@@ -71,6 +115,7 @@
 
   setupClose.addEventListener('click', function () {
     closePopup();
+    resetPopupCoordinates();
   });
 
   setupClose.addEventListener('keydown', setupCloseEnterHandler);
