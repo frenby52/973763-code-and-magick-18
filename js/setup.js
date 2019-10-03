@@ -16,7 +16,6 @@
   var setupSimilarList = document.querySelector('.setup-similar-list');
   var wizardTemplateId = document.querySelector('#similar-wizard-template');
   var wizardTemplate = wizardTemplateId.content.querySelector('.setup-similar-item');
-  var isFocus = false;
 
   var defaultX = setupBlock.style.top;
   var defaultY = setupBlock.style.left;
@@ -55,30 +54,24 @@
   };
 
   activateSetupSimilar();
-  insertWizardElements(window.data.wizardsData);
+  insertWizardElements(window.data);
 
   var openPopup = function () {
     setupBlock.classList.remove('hidden');
-    userNameInput.addEventListener('focus', function () {
-      isFocus = true;
-    });
-    userNameInput.addEventListener('blur', function () {
-      isFocus = false;
-    });
     wizardCoat.addEventListener('click', function () {
-      var coatColor = window.util.chooseRandomColor(window.data.colors.WIZARD_COAT_COLORS);
+      var coatColor = window.util.chooseRandomColor(window.colors.WIZARD_COAT_COLORS);
       wizardCoat.style.fill = coatColor;
       coatColorInput.value = coatColor;
     });
 
     wizardEyes.addEventListener('click', function () {
-      var eyesColor = window.util.chooseRandomColor(window.data.colors.WIZARD_EYES_COLORS);
+      var eyesColor = window.util.chooseRandomColor(window.colors.WIZARD_EYES_COLORS);
       wizardEyes.style.fill = eyesColor;
       eyesColorInput.value = eyesColor;
     });
 
     setupFireball.addEventListener('click', function () {
-      var fireballColor = window.util.chooseRandomColor(window.data.colors.WIZARD_FIREBALL_COLORS);
+      var fireballColor = window.util.chooseRandomColor(window.colors.WIZARD_FIREBALL_COLORS);
       setupFireball.style.backgroundColor = fireballColor;
       fireballColorInput.value = fireballColor;
     });
@@ -101,7 +94,7 @@
   };
 
   var popupEscPressHandler = function (evt) {
-    if (!isFocus) {
+    if (userNameInput !== document.activeElement) {
       window.util.isEscEvent(evt, closePopup);
       resetPopupCoordinates();
     }
