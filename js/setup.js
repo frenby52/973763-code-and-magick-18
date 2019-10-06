@@ -16,6 +16,8 @@
   var setupSimilarList = document.querySelector('.setup-similar-list');
   var wizardTemplateId = document.querySelector('#similar-wizard-template');
   var wizardTemplate = wizardTemplateId.content.querySelector('.setup-similar-item');
+  var setupWizardForm = setupBlock.querySelector('.setup-wizard-form');
+  var WIZARDS_QUANTITY = 4;
 
   var defaultX = setupBlock.style.top;
   var defaultY = setupBlock.style.left;
@@ -32,16 +34,17 @@
   var createWizardElement = function (data) {
     var wizardElement = wizardTemplate.cloneNode(true);
     wizardElement.querySelector('.setup-similar-label').textContent = data.name;
-    wizardElement.querySelector('.wizard-coat').style.fill = data.coatColor;
-    wizardElement.querySelector('.wizard-eyes').style.fill = data.eyesColor;
+    wizardElement.querySelector('.wizard-coat').style.fill = data.colorCoat;
+    wizardElement.querySelector('.wizard-eyes').style.fill = data.colorEyes;
 
     return wizardElement;
   };
 
   var createWizardElements = function (data) {
     var documentFragment = document.createDocumentFragment();
-    for (var i = 0; i < data.length; i++) {
-      var wizardElement = createWizardElement(data[i]);
+    for (var i = 0; i < WIZARDS_QUANTITY; i++) {
+      var randomIndexWizards = window.util.randomInteger(0, data.length - 1);
+      var wizardElement = createWizardElement(data[randomIndexWizards]);
       documentFragment.appendChild(wizardElement);
     }
 
@@ -53,10 +56,41 @@
     setupSimilarList.appendChild(documentFragment);
   };
 
-  activateSetupSimilar();
-  insertWizardElements(window.data);
+  var clearSimilarList = function () {
+    setupSimilarList.innerHTML = '';
+  };
+
+  var loadHandler = function (data) {
+    insertWizardElements(data);
+    activateSetupSimilar();
+  };
+
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red; top:-20px';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+    node.textContent = errorMessage;
+    setupSimilarList.insertAdjacentElement('afterbegin', node);
+  };
+
+  var formUploadHandler = function () {
+    setupBlock.classList.add('hidden');
+    resetPopupCoordinates();
+    clearSimilarList();
+  };
+
+  var formSubmitHandler = function (evt) {
+    window.backend.save(new FormData(setupWizardForm), formUploadHandler, errorHandler);
+    evt.preventDefault();
+  };
+
+  setupWizardForm.addEventListener('submit', formSubmitHandler);
 
   var openPopup = function () {
+    window.backend.load(loadHandler, errorHandler);
     setupBlock.classList.remove('hidden');
     wizardCoat.addEventListener('click', function () {
       var coatColor = window.util.chooseRandomColor(window.colors.WIZARD_COAT_COLORS);
@@ -82,6 +116,7 @@
   var closePopup = function () {
     setupBlock.classList.add('hidden');
     document.removeEventListener('keydown', popupEscPressHandler);
+    clearSimilarList();
   };
 
   var setupOpenEnterHandler = function (evt) {
