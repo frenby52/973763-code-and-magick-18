@@ -2,24 +2,25 @@
 
 (function () {
   var setupBlock = document.querySelector('.setup');
+  var errorElement;
 
   var showError = function (errorMessage) {
-    var node = document.createElement('div');
-    node.classList.add('load-error');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red; top:-20px';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-    node.textContent = errorMessage;
-    setupBlock.insertAdjacentElement('afterbegin', node);
+    errorElement = document.createElement('div');
+    errorElement.classList.add('load-error');
+    errorElement.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red; top:-20px';
+    errorElement.style.position = 'absolute';
+    errorElement.style.left = 0;
+    errorElement.style.right = 0;
+    errorElement.style.fontSize = '30px';
+    errorElement.textContent = errorMessage;
+    setupBlock.insertAdjacentElement('afterbegin', errorElement);
   };
 
   var removeErrorMessage = function () {
-    var ErrorElement = document.querySelector('.load-error');
-    ErrorElement.remove();
+    if (errorElement) {
+      errorElement.remove();
+    }
   };
-
 
   window.message = {
     showError: showError,
