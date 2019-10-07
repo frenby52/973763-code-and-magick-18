@@ -60,37 +60,36 @@
     setupSimilarList.innerHTML = '';
   };
 
+  var removeErrorMessage = function () {
+    var ErrorElement = document.querySelector('.load-error');
+    ErrorElement.remove();
+  };
+
   var loadHandler = function (data) {
     insertWizardElements(data);
     activateSetupSimilar();
   };
 
-  var errorHandler = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red; top:-20px';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-    node.textContent = errorMessage;
-    setupSimilarList.insertAdjacentElement('afterbegin', node);
+  var loadErrorHandler = function (error) {
+    window.message.showError(error);
   };
 
   var formUploadHandler = function () {
     setupBlock.classList.add('hidden');
     resetPopupCoordinates();
     clearSimilarList();
+    removeErrorMessage();
   };
 
   var formSubmitHandler = function (evt) {
-    window.backend.save(new FormData(setupWizardForm), formUploadHandler, errorHandler);
+    window.backend.save(new FormData(setupWizardForm), formUploadHandler, loadErrorHandler);
     evt.preventDefault();
   };
 
   setupWizardForm.addEventListener('submit', formSubmitHandler);
 
   var openPopup = function () {
-    window.backend.load(loadHandler, errorHandler);
+    window.backend.load(loadHandler, loadErrorHandler);
     setupBlock.classList.remove('hidden');
     wizardCoat.addEventListener('click', function () {
       var coatColor = window.util.chooseRandomColor(window.colors.WIZARD_COAT_COLORS);
@@ -117,6 +116,7 @@
     setupBlock.classList.add('hidden');
     document.removeEventListener('keydown', popupEscPressHandler);
     clearSimilarList();
+    removeErrorMessage();
   };
 
   var setupOpenEnterHandler = function (evt) {
