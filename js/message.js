@@ -15,7 +15,14 @@
     setupBlock.insertAdjacentElement('afterbegin', node);
   };
 
+  var removeErrorMessage = function () {
+    var ErrorElement = document.querySelector('.load-error');
+    ErrorElement.remove();
+  };
+
+
   window.message = {
-    showError: showError
+    showError: showError,
+    removeErrorMessage: removeErrorMessage
   };
 })();

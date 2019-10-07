@@ -60,11 +60,6 @@
     setupSimilarList.innerHTML = '';
   };
 
-  var removeErrorMessage = function () {
-    var ErrorElement = document.querySelector('.load-error');
-    ErrorElement.remove();
-  };
-
   var loadHandler = function (data) {
     insertWizardElements(data);
     activateSetupSimilar();
@@ -78,7 +73,7 @@
     setupBlock.classList.add('hidden');
     resetPopupCoordinates();
     clearSimilarList();
-    removeErrorMessage();
+    window.message.removeErrorMessage();
   };
 
   var formSubmitHandler = function (evt) {
@@ -116,7 +111,7 @@
     setupBlock.classList.add('hidden');
     document.removeEventListener('keydown', popupEscPressHandler);
     clearSimilarList();
-    removeErrorMessage();
+    window.message.removeErrorMessage();
   };
 
   var setupOpenEnterHandler = function (evt) {
